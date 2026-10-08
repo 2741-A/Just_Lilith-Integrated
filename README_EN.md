@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.1`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.2`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -150,7 +150,7 @@ The optional **Lilith Agent** uses a dedicated Codex conversation to take on tas
 
 ### Install (recommended: just double-click)
 
-Download **`Just_Lilith-Setup.exe`** and double-click it. No manual extraction, and no accidentally nested folder.
+Grab **`Just_Lilith-Setup.exe`** (~60 MB) from **[Releases](https://github.com/2741-A/Just_Lilith-Integrated/releases/latest)** and double-click it. No manual extraction, and no accidentally nested folder.
 
 It finds the game by itself (any Steam install), and lays out what's available — size, installed or not, checked or not:
 

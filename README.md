@@ -14,7 +14,7 @@
 > 原作者是 **Ariname-Lilith**（B站「烤门万」），仓库：[`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith)。
 > 如果你想要**原版**，请去作者那边。这一份是在原版基础上加了功能的版本，许可与声明见文末。
 
-**当前版本：`0.3.0-ext.1`** · Windows · BepInEx IL2CPP · 中文对话 · 中／日语音
+**当前版本：`0.3.0-ext.2`** · Windows · BepInEx IL2CPP · 中文对话 · 中／日语音
 
 
 ---
@@ -151,7 +151,7 @@
 
 ### 安装（推荐：双击就完事）
 
-下载 **`Just_Lilith-Setup.exe`**，双击。不用手动解压，也不会多套一层文件夹。
+去 **[Releases](https://github.com/2741-A/Just_Lilith-Integrated/releases/latest)** 下载 **`Just_Lilith-Setup.exe`**（约 60 MB），双击。不用手动解压，也不会多套一层文件夹。
 
 它会自己找到游戏（Steam 库里装的都能认出来），把要装的东西列清楚 —— 各多大、装没装、勾不勾：
 
