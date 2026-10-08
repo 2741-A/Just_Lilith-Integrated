@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.2`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.3`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -29,6 +29,7 @@ Hi, I'm Lilith.
 - **🔌 Agent isn't tied to OpenAI** — it runs over the Codex channel, but the provider can be swapped for DeepSeek or any OpenAI-compatible service. You need an API key, not an OpenAI account.
 - **🎵 Music commentary** — when music plays, she looks up what the song is and adds a short remark in her own voice. Sources are queried in priority order (official wiki → Moegirlpedia → Bilibili → Bing → Sogou → 360 → NetEase); if the model can't find anything, it falls back to the game's own line pool instead of going silent. Comments are cached locally and rotate through angles.
 - **🎼 Lyrics overlay** — shows the current line on screen, with per-character highlighting and a Chinese translation. Reads local `.lrc` / `.zh.lrc` first, only falling back to NetEase.
+- **🔗 Listens along with your music player** — play something in QQ Music / NetEase Cloud Music and she enters her "listening" state: a ♪ note appears overhead and she sways along, with the usual music commentary. While external music is playing, the in-game player steps aside so the two don't fight over your speakers.
 - **💰 Balance reminder** — pings you once when your DeepSeek balance drops below a threshold (only on the "sufficient → insufficient" transition, never repeatedly).
 - **🪑 Sit on your window** — press **F5** and she climbs up and sits down; also has walk-over / back-to-centre / leave-seat commands.
 - **🎭 More triggerable actions** — the action whitelist goes from 45 to 52 entries (the **animations themselves come from the game**; this just makes them callable in conversation).
