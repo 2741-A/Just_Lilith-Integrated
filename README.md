@@ -14,7 +14,7 @@
 > 原作者是 **Ariname-Lilith**（B站「烤门万」），仓库：[`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith)。
 > 如果你想要**原版**，请去作者那边。这一份是在原版基础上加了功能的版本，许可与声明见文末。
 
-**当前版本：`0.3.0-ext.3`** · Windows · BepInEx IL2CPP · 中文对话 · 中／日语音
+**当前版本：`0.3.0-ext.4`** · Windows · BepInEx IL2CPP · 中文对话 · 中／日语音
 
 
 ---
