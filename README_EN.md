@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.4`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.5`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
