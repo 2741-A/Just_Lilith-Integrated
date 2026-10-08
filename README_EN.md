@@ -30,12 +30,27 @@ Hi, I'm Lilith.
 - **🎵 Music commentary** — when music plays, she looks up what the song is and adds a short remark in her own voice. Sources are queried in priority order (official wiki → Moegirlpedia → Bilibili → Bing → Sogou → 360 → NetEase); if the model can't find anything, it falls back to the game's own line pool instead of going silent. Comments are cached locally and rotate through angles.
 - **🎼 Lyrics overlay** — shows the current line on screen, with per-character highlighting and a Chinese translation. Reads local `.lrc` / `.zh.lrc` first, only falling back to NetEase.
 - **💰 Balance reminder** — pings you once when your DeepSeek balance drops below a threshold (only on the "sufficient → insufficient" transition, never repeatedly).
+- **🪑 Sit on your window** — press **F5** and she climbs up and sits down; also has walk-over / back-to-centre / leave-seat commands.
+- **🎭 More triggerable actions** — the action whitelist goes from 45 to 52 entries (the **animations themselves come from the game**; this just makes them callable in conversation).
+- **👤 She can say your name** — reads the in-game player name and uses it in conversation.
+- **🫧 Bubble ↔ voice ↔ action in sync** — the three no longer run independently: the bubble appears together with the start of speech, and the action fires at the moment she starts talking.
+
+> ⚠️ **Only the items above are this fork's work.** The whole next section (chat, realm memory,
+> worldbook, local voice, Agent) is **built into the original Just_Lilith** — this fork only modifies it
+> and should not be credited with it.
 
 ---
 
 ## A look at what we can do together
 
-### Talk with me — you don't have to pick from prepared lines
+> 📌 **This section describes what the *original* Just_Lilith already does** — by
+> **[Ariname-Lilith](https://github.com/Ariname-Lilith/Just_Lilith)**, **not by this fork.**
+> This fork is a downstream modification *built on top of* that: **what it adds is in the section above**,
+> and **what it changed in the original** is listed item by item in
+> [来源与改动说明.md](来源与改动说明.md) (Chinese).
+> Each heading below is tagged **(original)** or **(original + fork changes)**.
+
+### Talk with me — you don't have to pick from prepared lines **(original)**
 
 "How was your day?" "I just thought of something strange." "Lilith, help me think this through." — any of those work as an opener.
 
@@ -47,7 +62,7 @@ The plugin connects to any OpenAI-format model service. Press **F7** to bring up
 
 > Pick the line that connects us, then call me. And don't forget to hit save — typing it into the box doesn't count as a promise yet.
 
-### A place each conversation can come back to
+### A place each conversation can come back to **(original)**
 
 I call these separate conversations **dreams**. You can create, switch, rename, and delete them to keep different topics apart.
 
@@ -64,7 +79,7 @@ These designs are for continuity — **not a guarantee that every line is rememb
 
 > Also: the built-in persona and background material draw on the original story and its branches. **If you mind spoilers, finish the game first, then come read my recollections.**
 
-### Let the words carry a little voice too
+### Let the words carry a little voice too **(original + fork changes: default Chinese model, works without an NVIDIA GPU, faster synthesis)**
 
 A local **GPT-SoVITS TTS service**, speaking **Chinese and Japanese**; bubbles and normal chat text stay in Chinese.
 
@@ -76,7 +91,7 @@ Enabling voice or switching languages the first time loads the relevant model; t
 
 > Oh, you want the tsundere version? I can play along. Just don't treat that as my fixed tone for every line.
 
-### Once in a while, let's do something properly
+### Once in a while, let's do something properly **(original + fork changes: provider can be swapped for any OpenAI-compatible service)**
 
 The optional **Lilith Agent** uses a dedicated Codex conversation to take on tasks in a project directory you configure; with the right tools and permissions it can run commands and edit files, not just give advice.
 
