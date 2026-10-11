@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.5`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.10`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -35,6 +35,8 @@ Hi, I'm Lilith.
 - **🎭 More triggerable actions** — the action whitelist goes from 45 to 52 entries (the **animations themselves come from the game**; this just makes them callable in conversation).
 - **👤 She can say your name** — reads the in-game player name and uses it in conversation.
 - **🫧 Bubble ↔ voice ↔ action in sync** — the three no longer run independently: the bubble appears together with the start of speech, and the action fires at the moment she starts talking.
+
+- **🕐 "Follow Schedule" in her menu (0.3.0-ext.10)** — open her menu (double-click the function key) and click 换上常服/换上睡衣: a submenu pops up with **换衣服 (Change Clothes)** = manually switch to the other outfit (snap-change), and **跟随作息 (Follow Schedule)** = hand control back to the game's schedule (snap back to what she should wear right now).
 
 > ⚠️ **Only the items above are this fork's work.** The whole next section (chat, realm memory,
 > worldbook, local voice, Agent) is **built into the original Just_Lilith** — this fork only modifies it
