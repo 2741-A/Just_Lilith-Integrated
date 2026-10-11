@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.10`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.11`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -37,6 +37,8 @@ Hi, I'm Lilith.
 - **🫧 Bubble ↔ voice ↔ action in sync** — the three no longer run independently: the bubble appears together with the start of speech, and the action fires at the moment she starts talking.
 
 - **🕐 "Follow Schedule" in her menu (0.3.0-ext.10)** — open her menu (double-click the function key) and click 换上常服/换上睡衣: a submenu pops up with **换衣服 (Change Clothes)** = manually switch to the other outfit (snap-change), and **跟随作息 (Follow Schedule)** = hand control back to the game's schedule (snap back to what she should wear right now).
+
+- **🍰 Changing into pajamas while sitting for snack time (0.3.0-ext.11)** — while she is sitting for snack time, clicking 换上睡衣 makes her leave the snack state first (stand up), then snap into pajamas.
 
 > ⚠️ **Only the items above are this fork's work.** The whole next section (chat, realm memory,
 > worldbook, local voice, Agent) is **built into the original Just_Lilith** — this fork only modifies it
