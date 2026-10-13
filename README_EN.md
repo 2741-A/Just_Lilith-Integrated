@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.12`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.13`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -41,6 +41,10 @@ Hi, I'm Lilith.
 - **🍰 Changing into pajamas while sitting for snack time (0.3.0-ext.11)** — while she is sitting for snack time, clicking 换上睡衣 makes her leave the snack state first (stand up), then snap into pajamas.
 
 - **🎹 F5 window-sit & music appreciation restored + first-level menu fix (0.3.0-ext.12)** — ① the F5 window-sit hotkey is back (it was accidentally disabled during startup-hitch debugging); ② external music appreciation (QQ Music / NetEase Cloud Music) is back; ③ clicking 换上常服/睡衣 on the first-level menu now always snap-swaps — previously the game refused after a manual change, so the click did nothing; now it works standing, window-sitting, or during snack time.
+
+- **🚀 Fixed the "hitch on entry" and "outfit drops, then re-dresses" (0.3.0-ext.13)** — occasionally she would stutter right as she appeared, and you could catch her outfit dropping for a frame before snapping back. Root cause: the plugin did heavy work on the "main thread ready" frame — on IL2CPP, attaching a custom component takes **1–2 seconds each**, and three were attached at once → **a single-frame block of 3212 ms**, landing right around her entrance (press onto the dressing moment = "dropped *and* stuttered"; miss it = "just a stutter" — same cause, two symptoms). Everything now happens inside the loading screen instead: the same step went **3212 ms → 0 ms**, with **0 slow frames** across a whole session. Harmony patching and the first external-music scan are also spread across frames (≤80 ms/frame). Also fixed "the agent section disappeared from her settings", and outfit animation suppression is now narrowed by name (the old "block everything foreign" could stall the game's own flow).
+
+- **🔧 Installer: fixed a misleading false alarm (0.3.0-ext.13)** — if you ticked "voice runtime installer (RTX 50 series)", the installer reported a wrong extraction layer, but **the files were actually placed correctly** — the self-check simply compared against the wrong path (the archive's top folder has an `-rtx50` suffix that the check was missing). Also: **that component is only for RTX 5060 / 5070 / 5080 / 5090** — other GPUs (integrated included) should use the "generic" one above; the installer reads your GPU and picks for you, so don't tick both.
 
 > ⚠️ **Only the items above are this fork's work.** The whole next section (chat, realm memory,
 > worldbook, local voice, Agent) is **built into the original Just_Lilith** — this fork only modifies it
