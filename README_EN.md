@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.13`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.22`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -45,6 +45,8 @@ Hi, I'm Lilith.
 - **🚀 Fixed the "hitch on entry" and "outfit drops, then re-dresses" (0.3.0-ext.13)** — occasionally she would stutter right as she appeared, and you could catch her outfit dropping for a frame before snapping back. Root cause: the plugin did heavy work on the "main thread ready" frame — on IL2CPP, attaching a custom component takes **1–2 seconds each**, and three were attached at once → **a single-frame block of 3212 ms**, landing right around her entrance (press onto the dressing moment = "dropped *and* stuttered"; miss it = "just a stutter" — same cause, two symptoms). Everything now happens inside the loading screen instead: the same step went **3212 ms → 0 ms**, with **0 slow frames** across a whole session. Harmony patching and the first external-music scan are also spread across frames (≤80 ms/frame). Also fixed "the agent section disappeared from her settings", and outfit animation suppression is now narrowed by name (the old "block everything foreign" could stall the game's own flow).
 
 - **🔧 Installer: fixed a misleading false alarm (0.3.0-ext.13)** — if you ticked "voice runtime installer (RTX 50 series)", the installer reported a wrong extraction layer, but **the files were actually placed correctly** — the self-check simply compared against the wrong path (the archive's top folder has an `-rtx50` suffix that the check was missing). Also: **that component is only for RTX 5060 / 5070 / 5080 / 5090** — other GPUs (integrated included) should use the "generic" one above; the installer reads your GPU and picks for you, so don't tick both.
+
+- **🗣️ Proactive chat becomes an event pool + talking motion in regular chat (0.3.0-ext.22)** — ① the proactive-chat experiment (off by default; enable it by setting `ambient_test` to `true` in `local.just_lilith.json`) grows from two hardcoded lines into an **event pool**: events are chosen by "who you are" — **student / office worker / creator (video editing, streaming) / free time (unemployed, at home) / general** — set it with `ambient_profile`, or just **tell her in chat** ("I'm a student / I have a job / I make videos / I'm between jobs") and she remembers and switches (writing it in her worldbook also works); each event has a daily **time window** (e.g. morning class 7–9, evening study 19–22); **spoken events are deleted and never repeat**, while unspoken events retry at the same window the next day; at most 3 proactive chats per day (`ambient_max_per_day`, 3–5). Dashes and ellipses now pause naturally in the voice, no more swallowed words; the reply bubble after picking an option appears reliably and closes right after the voice. ② **Regular chat and agent chat**: she now has a **talking motion** while speaking, and dashes/ellipses pause naturally — these two apply to **everyone by default**, no switch needed. Players who leave `ambient_test` off only get the ② changes.
 
 > ⚠️ **Only the items above are this fork's work.** The whole next section (chat, realm memory,
 > worldbook, local voice, Agent) is **built into the original Just_Lilith** — this fork only modifies it
@@ -193,6 +195,8 @@ The original plugin's health check requires the speech service to report `device
 
 This fork changes that to "use CUDA if present, otherwise fall back to CPU" — so integrated graphics (Intel Arc / AMD) can speak too. The cost is that it computes on CPU, so it's slower.
 
+> ⏳ **Expect a short wait before the first word — this is normal:** the voice service (the local synthesis engine) starts **after she appears** — deliberately, so it doesn't fight the entrance animation for resources and stall the intro. Startup + model loading takes roughly **half a minute to a minute**. If you talk to her during that window, **the bubble shows first and the voice queues up and plays once the service is ready** — not broken, just wait a moment. There's a warm-up like this every time you launch the game.
+
 **The "speech acceleration patch" component exists for this. It does two things:**
 
 1. **Writes a patched speech service script** (29 KB, instant) — the fix above, plus support for v2 / v2Pro acoustic models and batch size 1 → 8 (measured ~40% faster synthesis)
@@ -218,13 +222,21 @@ This fork changes that to "use CUDA if present, otherwise fall back to CPU" — 
    > This is a **multi-volume archive**; missing either one means it won't extract.
    > If GitHub is slow, prefix the URL with `https://ghfast.top/` to go through a mirror.
 
-2. Drop both files, **as-is**, into `Desktop\Just_Lilith-TTS\` (no need to extract)
+2. **No need to extract, and no need to work out where the files go** — either:
+   - click **「📁 选我下载的语音包…」(Pick the voice pack)** and point at the folder you downloaded into; or
+   - **drag the files/folder straight onto the installer window** (split volumes are paired automatically).
+
+   > Same drive = the file is **moved** (instant, no extra space); different drive = it's copied,
+   > and the installer tells you the original is still there.
+   > You can still do it by hand: drop both files **as-is** into `Desktop\Just_Lilith-TTS\`
+   > (no need to extract) — **② Open drop folder** takes you there.
 3. Come back and click **Install**
 
 The installer verifies SHA256 → extracts → strips the outer folder → puts everything in place.
 
-> The UI has exactly these two buttons: **① Open release page** and **② Open drop folder**.
-> You don't have to hunt through the release page or find the folder.
+> Those two pick buttons are **always on the bottom row** of the window.
+> **① Open release page** and **② Open drop folder** live in the "drop zone" note,
+> which is only shown while the voice pack isn't installed yet.
 
 **Route B — let the installer download it**
 
