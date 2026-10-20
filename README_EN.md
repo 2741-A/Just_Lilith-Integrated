@@ -14,7 +14,7 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.24`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.28`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
 
 
 ---
@@ -50,7 +50,7 @@ Hi, I'm Lilith.
 
 - **🔓 Fixed the "dependency escaped the TTS directory" false alarm (0.3.0-ext.24)** — the voice pack's anti-tamper self-check pins the Steam overlay by **file hash**; every time the Steam client updates the overlay, the hash no longer matches and the voice service refuses to start (**no voice at all**; the doctor reports "dependency escaped the TTS directory"). This version relaxes the overlay check to "right name + already in the process before model load + never referenced by Python" — future Steam updates won't matter. **All other out-of-directory escapes are still rejected strictly**; the anti-tamper protection is unchanged. Affected players are simply those whose Steam overlay was updated — nothing to do with their PC or what they did.
 
-- **🔀 Switch the Chinese voice right from the installer (0.3.0-ext.24)** — the installer's main window gains a "Chinese voice" section: **v2Pro** (default; keeps up with real time even on CPU/iGPU) or **v4** (sounds best, recommended for NVIDIA GPUs). Click "apply voice" and it's done — the old config is backed up automatically, and it takes effect after restarting the game. The switch only touches the three Chinese lines in `voices.json`; nothing else is touched; re-selecting the same version doesn't rewrite anything; missing model files are **named one by one** with a confirmation prompt (you'd get no voice without them); custom weight configs are detected and backed up first. A CLI switch also exists: `--voice v4`. The doctor report now includes a "Chinese voice" line.
+- **🔀 Switch the Chinese voice right from the installer (0.3.0-ext.24 / 0.3.0-ext.25)** — the installer's main window gains a "Chinese voice" section: **v2Pro** (default; keeps up with real time even on CPU/iGPU) or **v4** (sounds best, recommended for NVIDIA GPUs). Click "apply voice" and it's done — the old config is backed up automatically, and it takes effect after restarting the game. The switch touches the three Chinese model lines in `voices.json`; **the reference audio switches along with the model** (since 0.3.0-ext.25): v4 gets the pack's original v4 references, v2Pro gets the community references it was adapted for — round trips land on the right set. Re-selecting the same version doesn't rewrite anything; missing model files are **named one by one** with a confirmation prompt (you'd get no voice without them); custom weight configs are detected and backed up first. A CLI switch also exists: `--voice v4`. The doctor report now includes a "Chinese voice" line (with reference state).
 
 > ⚠️ **Only the items above are this fork's work.** The whole next section (chat, realm memory,
 > worldbook, local voice, Agent) is **built into the original Just_Lilith** — this fork only modifies it
