@@ -35,6 +35,7 @@
 | **.NET 6** | 插件运行时 | Microsoft | MIT | ❌ 随游戏环境 |
 | **Codex CLI** | Agent 通道（可选） | https://github.com/openai/codex | **Apache-2.0**（实测版本 `0.161.0`） | ❌ 使用者自备 |
 | **Harmony (Lib.Harmony)** | 运行时补丁 | https://github.com/pardeike/Harmony | MIT | ✅ 随插件 DLL |
+| **NAudio** | FLAC → WAV 解码（Media Foundation） | https://github.com/naudio/NAudio | **MIT** | ✅ 随插件 DLL（NAudio.Core / NAudio.Wasapi） |
 | **7-Zip 24.09** | **安装器**解压 RAR / 多卷 7z | https://www.7-zip.org | **LGPL-2.1** + unRAR 限制 + BSD | ✅ 内嵌在安装器里（2.37 MB，见 2.1） |
 
 ### 2.1 ⚠️ 安装器内嵌了 7-Zip —— 附许可文本是**硬性要求**，不是可选项
@@ -181,6 +182,10 @@
 - Agent 的 Codex `ThreadId`（`workspace/agent/session.json`）
 - 游戏日志（`BepInEx/LogOutput.log`）
 - 开发机的绝对路径、截图、训练数据集
+
+> 🛡️ **卸载同样不会收走聊天记录**：即使勾选「连 BepInEx 框架一起删」，
+> `BepInEx\config\local.just_lilith.workspace`（普通聊天 / Agent 聊天原文、
+> 记忆卡片、人设、主人档案）也会**原地保留**；其它配置文件仍会先备份到桌面 zip 再按原逻辑处理。
 
 > 📌 **打包前请对照这份清单逐条检查。** 这一类文件「看着像配置、其实是本人」，最容易漏。
 

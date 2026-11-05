@@ -14,7 +14,41 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.39`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.59`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+
+## 0.3.0-ext.59 changes
+
+- **🎙️ Bring your own TTS**: an external speech service only needs `GET /health` and `POST /synthesize` (returning 16-bit PCM WAV); enable `external_service` in the config. Loopback only; the plugin never starts or stops your service, and reports “external TTS not running” when it is unavailable. Full contract in `TTS-外部接口.md`, with a stdlib-only `外部TTS示例服务.py`.
+- **🎵 Local music organization**: newly converted FLACs and the existing library are organized into per-song folders; the plugin reads one level of subfolders so the player still sees them. Same-title songs are matched by artist + duration, so lyrics no longer cross songs; embedded lyrics in FLAC / OGG / M4A / WAV are extracted to `.lrc`. Can be disabled in `local.just_lilith.music-convert.json`.
+- **👗 Wardrobe and outfits**: locally unlocked glasses and hats persist across restarts; changing between casual and pajamas preserves accessories, and the game's scheduled clothing changes use the same restore path. After the finger snap, she stays hidden for 0.5 seconds so the new outfit is fully applied before she appears.
+- **🖥️ Window and lyrics**: the canvas expands to fit each machine's screen; floating panels stop at the canvas edge instead of being clipped; lyrics use the game's own camera mapping and sit above her head again; lyrics hide 4 seconds after music stops, and proactive lines disappear after 180 seconds without a reply.
+- **💬 Chat box and hotkey**: the chat box is clamped inside window ∩ screen, so it no longer runs off-screen; F7 uses the same global key path as F5 and works even when the game is not focused.
+- **🩺 Diagnostics and installer**: new “game won't open” diagnostics (`--game-diag`, includes `Player.log` / `Player-prev.log`); diagnostic entries merged into “🩺 Diagnostics…”; per-component uninstall; RTX 50-series GPUs automatically get the cu128 voice runtime.
+- **⚡ Other fixes**: the final 452ms hitch in the clothing batch was the lyrics font being created for the first time; it is now warmed up during the loading screen. The 1004 side bow and wardrobe checkmark icon are fixed too.
+- **⬆️ Upgrade**: run the new `Just_Lilith-Setup.exe`; plugin package about 42.9 MB, installer about 104.6 MB. Restart the game afterwards. Existing chats, memories, listening data and wardrobe data are preserved.
+
+## 0.3.0-ext.41 changes
+
+- **🧠 One memory system across features**: normal chat, Agent, proactive talk, novels, listening and notes now share one event ledger, evidence chain, visibility filter and delivery ledger. Forgotten/private content disappears from all of them instead of each feature keeping its own memory.
+- **🪞 Things she later understood**: chapters can produce reflections with source-backed quotes. A newer version supersedes the old one, and forgetting the source retires the reflection; no free-floating sentiment.
+- **🔎 Optional local semantic reranking**: BGE-small-zh-v1.5 (MIT) runs locally, computes cosine similarity only, and sends nothing over the network; the model ships with the plugin. Missing runtime dependencies or worker timeouts fall back to keyword ordering, so chat is unaffected.
+- **🎬 Every real action reaches novel material**: unclassified behaviors are recorded as readable actions; interaction episodes are no longer limited to a fixed list. All real actions link chronologically with spoken lines, touched body parts and drag destinations; the state snapshot is listed separately and never presented as something she just did.
+- **✍️ You can answer at the end of a chapter, and it enters memory**: every chapter has a reply box under her question. Once submitted it is immutable — no “edit” button. The reply enters the unified event ledger and the next chapter can respond to it naturally; it stays your words, is not put on her current-understanding page, and is never disguised as her reflection.
+- **🛡️ Generic post-write review**: dangling “第 N 行/项/条” list labels and “old version/previous version” references are rejected on any page for any player; the prompt also asks her to self-review for implausible turns.
+- **👗 Clothing and accessories are recorded**: a player's button/opinion is only `ClothingRequest`; the actual `ClothingChange` is recorded when she snaps her fingers. Hats/glasses are `AccessoryChange` and only happen when you change them in the wardrobe. A full wardrobe catalog is written to `appearance-catalog.json`, not just the white-cat hat.
+- **🩺 Clothing-schedule diagnostic fixed**: `cloth_auto_diag` now calls the real `IsInPajamasTime(DateTime, float)` signature, so the diagnostic line no longer reports `TargetParameterCountException`.
+- **⬆️ Upgrade**: run the new `Just_Lilith-Setup.exe`; the plugin package now includes the semantic model (about 41.2 MB, installer about 102.9 MB). Restart the game afterwards. Existing chats, memories, listening data and wardrobe data are preserved.
+
+## 0.3.0-ext.40 changes
+
+- **📖 Memory book / listening memory book are in the package**: the third “听歌记忆” tab, music cards and page-flip, memory-book chapters and the existing “我记得的你” / “我写下的我们” changes are all inside this plugin package; open the memory page after install or upgrade. No extra files.
+- **🔤 No more title size jump**: the book now snaps to its final fitted scale before fading in instead of shrinking from 1 during the fade, and the title ghost uses the cover title's actual on-screen font size. The card title and cover title meet at the same visual size — no more “grows huge, then suddenly shrinks”.
+- **🖥️ High-refresh title handoff**: the title ghost now lays out once and animates only with `transform` on the compositor instead of changing `left/top/width/font-size` every frame, so 120Hz displays no longer drop to 60fps during the opening handoff.
+- **⚡ 60fps page-flip**: the memory page now opens in a dedicated Edge app window with Windows/Chromium occlusion throttling disabled, so the listening memory book stays at 60fps while the game window is in front (measured median frame interval 16.7ms) instead of dropping to 30fps. If Edge is missing it falls back to the default browser.
+- **🎵 The background no longer moves while the book opens**: the card wall, tabs and scroll position stay exactly where they were; only a dim layer fades in on the parent page, and closing the book returns to the same place.
+- **🧩 Comments are no longer split by title**: the same song reported as different titles (`IRAS` / `IRAS 17514`, trailing `(1)` / 5-digit IDs, Anime ver. / Remastered / Live edition tags, etc.) is merged into one card. The old comment cache is merged on load with the same rule; IRAS is one card with 19 comments. Covers, Part/Chapter and artist prefixes remain separate so genuinely different songs are not merged.
+- **🎼 Embedded lyrics take priority**: when an old `.lrc` exists, timed embedded lyrics from the file win; a wrong lyric can no longer override the correct one inside the file. The installer's Music Doctor preserves ID3v2.3/v2.4 USLT and cover art.
+- **⬆️ Upgrade**: run the new `Just_Lilith-Setup.exe`; the installer updates the plugin by zip fingerprint. Restart the game afterwards. Existing chats, memories and listening data stay in `local.just_lilith.workspace`.
 
 ## 0.3.0-ext.39 changes
 

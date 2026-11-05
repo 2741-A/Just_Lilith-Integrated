@@ -200,6 +200,49 @@ shows progress in its own window while the CLI streams it into the report file.
 > the script installs Python into `tts\runtime\`, which must already exist. The installer says
 > "语音目录不在" and tells you to run `--install` first. **That is not a network problem.**
 
+### Step 4.6 · External TTS (optional — **skip the 2.34 GB voice pack**)
+
+If the user already has their own TTS service (any model or framework), do **not** install the `tts`
+component or the voice runtime. The plugin can use their service instead.
+
+**Ask for:** the local HTTP base URL (for example `http://127.0.0.1:17901`).
+
+**Verify it before touching the game** — this must print `status : ready`:
+
+```powershell
+Invoke-RestMethod "http://127.0.0.1:17901/health"
+```
+
+**Write this file** — `<GAME>\BepInEx\config\local.just_lilith.tts.json` (UTF-8, no BOM), changing the
+port to the user's:
+
+```json
+{
+  "schema_version": 4,
+  "service_enabled": true,
+  "enabled": true,
+  "language": "Chinese",
+  "reference_mode": "Automatic",
+  "forced_reference_style": "neutral",
+  "reactions_enabled": true,
+  "volume": 1.0,
+  "service_url": "http://127.0.0.1:17901",
+  "external_service": true
+}
+```
+
+- `external_service: true` is required. The plugin will **not** start or stop their service.
+- `service_url` must be loopback (`127.0.0.1` / `localhost`), port 1024–65535, no path or query.
+- `"language"` is `"Chinese"` or `"Japanese"`.
+- Restart the game after writing it, then check `LogOutput.log` for `外部 TTS 已就绪`.
+- If the service is not running, the plugin reports **“外部 TTS 未启动”** and does **not** fall back
+  to the bundled runtime. That is intentional — tell the user to start their service first.
+
+The full contract (both endpoints, WAV format, error messages) is in **`TTS-外部接口.md`**; a
+stdlib-only sample server is **`外部TTS示例服务.py`**. For this setup the install plan can be
+`--only plugin,framework` (plus `agent` if they want the Agent). Do not edit DLLs or the Python
+runtime for this.
+
 ### Step 5 · Verify
 
 | Component | Proof it is installed |
@@ -287,7 +330,8 @@ The `--only` values are these ids; separate several with commas.
 | `tts` | zh/ja voice **models + inference engine** (**no Python**) | **~2.34 GB** | ✅ | Without it there is no voice; text chat still works |
 | `tts-zh-v2pro` | Chinese voice model v2Pro | ~398 MB | ✅ | Switches the Chinese default voice; **needs `tts`** |
 | `tts-voices-mod2` | Reference voice pack (video 2's set) | ~41 MB | ✅ | **The user decides** (see section 5) |
-| `tts-patch` | Voice speed patch | ~220 MB | ✅ | Makes speech near-realtime; **needs `tts-runtime*`**; **also what makes voice work at all without an NVIDIA card** |
+| `tts-patch` | Voice speed patch | ~220 MB | ✅ | Makes speech near-realtime; **needs `tts-runtime*`**; **also what makes voice work at all without an NVIDIA card**. Its pip list **pins numpy==1.23.4** (the ABI baseline for pyopenjtalk — don't "fix" it) |
+| `tts-cuda-torch` | **NVIDIA CUDA speed pack (RTX 50 rescue)** | **~3 GB** (auto-gated) | ✅ | Downloads **only if** an NVIDIA card exists **and** the shipped torch can't actually run on it (all RTX 50). Otherwise auto-skips. Force it: `--force-cuda` (GUI has the same checkbox). **Needs `tts-patch`** (reuses its numpy/sympy deps) |
 | `tts-runtime` | Voice runtime installer (**general**: integrated / AMD / non-50-series NVIDIA) | ~31 MB | ✅ | **Required for voice** — see section 5 |
 | `tts-runtime-rtx50` | Voice runtime installer (NVIDIA RTX 50-series only) | ~31 MB | ✅ | See section 5 — **pick exactly one of these two** (CLI picks for you) |
 | `agent-codex` | Lilith Agent | ~78 MB | no | Advanced. **Very broad permissions** (can modify any file on this PC) and burns API credits |
@@ -421,6 +465,13 @@ That script is what pulls the other 2.5–3 GB of Python and PyTorch.
 > key — the command **hangs forever** instead of failing. That is not an error, it is a hang, which is
 > the worst failure mode to debug. Use `--setup-runtime` instead: it drives the same script's `.ps1`
 > body directly, with no `pause`.
+>
+> ⚠️⚠️ **And never let a desktop AI app (DeepSeek desktop etc.) launch the `.bat` either.** Seen in
+> the field on 2026-10-18: processes spawned by such apps have no valid console handles, so Python
+> inside the script dies with `torch 导入失败: [Errno 2] No such file or directory: 'nul'` →
+> validation fails → install fails (dependencies were actually all installed; only the success marker
+> is missing). **Always delegate via the installer's `--setup-runtime`** — it creates child processes
+> correctly. The `.bat` is for humans double-clicking it.
 
 **When a user says "installed but there's no voice", ask first: was that step run?**
 
