@@ -27,6 +27,122 @@ Hi, I'm Lilith.
 - **⚡ Other fixes**: the final 452ms hitch in the clothing batch was the lyrics font being created for the first time; it is now warmed up during the loading screen. The 1004 side bow and wardrobe checkmark icon are fixed too.
 - **⬆️ Upgrade**: run the new `Just_Lilith-Setup.exe`; plugin package about 42.9 MB, installer about 104.6 MB. Restart the game afterwards. Existing chats, memories, listening data and wardrobe data are preserved.
 
+## 0.3.0-ext.58 changes
+
+> ext.55–ext.57 were not released separately; this version bundles them.
+
+### 1. Local music organized by song title
+
+- Newly converted FLACs and the existing library are organized into per-song folders: audio, lyrics, cache receipts and the original FLAC all go into `Music\Lilith\<song>\`.
+- The original game only scans the top level of `Music`; the plugin now reads one level of subfolders, so organized songs still appear in the player.
+- Safety: the whole pass is postponed while music is playing; files already in subfolders are left alone; existing files with the same name are skipped.
+- To keep your own folder layout, disable it in `BepInEx\config\local.just_lilith.music-convert.json`:
+  ```json
+  { "AutoOrganize": false, "AutoOrganizeExisting": false }
+  ```
+
+### 2. Lyrics no longer match the wrong song
+
+- Songs with the same title (different versions/arrangements) are matched by artist + duration: a difference over 60 seconds is rejected; over 12 seconds with a mismatched artist is also rejected.
+- Previously mismatched lyric caches are re-checked under the new rules and refetched if wrong.
+
+### 3. Embedded lyrics
+
+- Reads embedded lyrics from FLAC / OGG (Vorbis comments), M4A (©lyr) and WAV (RIFF INFO / ID3 USLT).
+- When converting FLAC to WAV, embedded lyrics are extracted to a `.lrc` file so they are not lost.
+
+### 4. Local wardrobe equipment persists across restarts
+
+- Glasses, hats and other items unlocked in the local wardrobe remain equipped after restarting the game.
+- Switching back to a normal item clears the memory for that slot; turning off "local wardrobe unlock" resets to the default item.
+
+### 5. Voice runtime for RTX 50-series GPUs
+
+- The installer now picks the RTX 50-series (cu128) or general runtime based on the GPU instead of installing cu118 on 50-series cards.
+- Missing or damaged runtime components are reported clearly instead of being skipped silently.
+
+### 6. Installer: per-component uninstall
+
+- Each entry in the "Installed" list now has its own "Uninstall" button, removing only that component.
+
+## 0.3.0-ext.54 changes
+
+### 1. Canvas expands to fit the screen
+
+- After the 2026-11-03 game update, the window only covered a small area around the character, so the music player, lyrics and chat box were clipped by the canvas.
+- The plugin now expands the window edges based on each machine's own screen size (larger on large screens) and keeps it expanded.
+- Uninstalling or disabling the plugin restores the game's default values instead of leaving the window permanently enlarged.
+- Manual control: `BepInEx\config\local.just_lilith.window.json`
+  ```json
+  { "box_enabled": true, "box_scale": 1.0 }
+  ```
+  `box_scale` accepts 0.2 – 3.
+
+### 2. Panels stop at the canvas edge
+
+- The off-screen boundary for floating panels (such as the music player) changed from the monitor work area to the current canvas.
+- Dragging a panel to the edge stops it there instead of letting it be clipped outside the window.
+
+### 3. Lyrics flying around — fixed
+
+- **Cause**: after the 11-03 update the window and camera follow the character, but lyric positioning still used the old "window = full screen, camera at world origin" calculation. The overhead position was off by over 800 pixels and got clamped to the canvas edge by the off-screen logic.
+- **Fix**: lyrics now use the game's own camera mapping (the same path as native dialogue bubbles) and sit steadily above her head again.
+
+### 4. Lyrics hide when music stops
+
+- The lyric panel is removed 4 seconds after music stops instead of leaving the last line on screen.
+
+### 5. Proactive lines no longer hang forever
+
+- After she speaks proactively, the line disappears if nobody replies within 180 seconds.
+- If there was no keyboard/mouse input during that period, it is treated as "you may not be at the screen" and does not count as ignoring her.
+
+### 6. Installer: diagnostics menu merged
+
+- The four side-by-side buttons (health check / bundle diagnostics / voice won't start / game won't open) are merged into one **"🩺 Diagnostics…"** menu; behavior and report contents are unchanged.
+
+## 0.3.0-ext.51 changes
+
+> This version covers the changes from ext.43 through ext.51.
+
+### 1. 1004 custom icon hat (ext.43 / ext.44)
+
+- The 1004 icon hat was reorganized and an icon loader was added (reads PNG from `BepInEx\config`).
+- Image used: `1004_游戏在用_200.png`.
+
+### 2. 1004 side bows missing — fixed (ext.45)
+
+- **Cause**: the 2026-11-03 game update moved `front_Lbow_a/b` and `front_Rbow_a/b` from the `default` skin into hat skins (such as `cfund/cakehat`). The 1004 icon hat copied the cake hat using the old "skip non-ribbon front pieces" rule and skipped them too.
+- **Fix**: `front_Lbow_a/b` and `front_Rbow_a/b` are now in the keep list and are copied from the cake hat skin.
+- The same version also fixed the wardrobe checkmark icon.
+
+### 3. Chat box no longer runs off-screen (ext.51)
+
+- The chat box still follows the character (anchored to the bottom center of the game window, 240 px up).
+- New four-side clamping keeps it inside the visible area of "window ∩ screen", so it cannot go off-screen on any side.
+  - When the character is near the bottom, the box is no longer pushed below the screen (measured window height 2144 > screen 1800).
+  - When the character is near an edge, the box no longer extends past the screen edge.
+
+### 4. "Game won't open" guard (ext.47)
+
+- Before switching window styles (opening the chat input), the plugin compares the window size against the screen size. If they do not match, it skips the window style change instead of touching an already abnormal window.
+- Note: the main cause of "won't open / black screen" is the game's layered-window pipeline (`UpdateLayeredWindow` failure / size mismatch); the plugin only avoids making it worse and does not change game behavior.
+
+### 5. Installer: "game won't open" diagnostics (ext.48)
+
+- New `--game-diag` command and a **🖥️ Game won't open? Find the cause…** button. It collects the game process, window (Win32: HWND/size/position/visibility/layered style), screen layout (resolution/DPI/multiple monitors), window mismatch errors from `LogOutput.log`, and key `Player.log` lines (GPU / display mapping / layered window / `ulw ok=` health).
+- "Bundle diagnostics" now also includes `Player.log` and `Player-prev.log`.
+- The health check now calls out window mismatches separately (`UpdateLayeredWindow` / `SetLayeredWindowAttributes` / screen size mismatch).
+
+## 0.3.0-ext.42 changes
+
+- **🛠️ "Our memories" no longer crashes**: the fallback click patch used to attach a prefix to native utility methods such as `IsPhilosophyMemoryEntry`, causing an access violation when opening "Our memories". It now only patches compiler-generated `b__` callbacks and nested callback classes, never native utility methods.
+- **👗 "Change clothes" actually changes clothes again**: after the menu hooks were installed early in `Load()`, the View maintenance loop assumed they were ready and skipped wiring the actions, so the second-level menu could be clicked but `_swapAction` was null. It now keeps wiring the three menu actions until they are connected, even if the hooks are already installed.
+- **🗣️ Adaptive speech segmentation**: short replies (≤60 meaningful characters, no `——`/`……`) still use one request with no added latency. Long replies are split at sentence-ending punctuation into chunks of about 56 meaningful characters. Each chunk is checked for empty, nearly silent or clearly too-short audio; on failure it retries once, then falls back to the whole sentence.
+- **💻 Same logic on NVIDIA and CPU**: segmentation, audio validation and retry live in the C# plugin, independent of the GPU. A 5060 and an iGPU/CPU run the same code, only synthesis speed differs.
+- **⚡ Short replies are not slowed down**: adaptive segmentation only applies to long replies or long pauses; validation only retries on failure, so a normal synthesis does not run twice.
+- **⬆️ Upgrade**: run the new `Just_Lilith-Setup.exe`; plugin package about 42.8 MB, installer about 104.6 MB. Restart the game afterwards. Existing chats, memories, listening data and wardrobe data are preserved.
+
 ## 0.3.0-ext.41 changes
 
 - **🧠 One memory system across features**: normal chat, Agent, proactive talk, novels, listening and notes now share one event ledger, evidence chain, visibility filter and delivery ledger. Forgotten/private content disappears from all of them instead of each feature keeping its own memory.
