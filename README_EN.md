@@ -14,7 +14,16 @@ Hi, I'm Lilith.
 > Original by **Ariname-Lilith** — [`Ariname-Lilith/Just_Lilith`](https://github.com/Ariname-Lilith/Just_Lilith).
 > If you want the **original**, go to the author's page. This one adds features on top of it; licensing and disclaimers are at the bottom of this file.
 
-**Version: `0.3.0-ext.59`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+**Version: `0.3.0-ext.60`** · Windows · BepInEx IL2CPP · Chinese dialogue · Chinese / Japanese voice
+
+## 0.3.0-ext.60 changes
+
+- **Local lyrics are no longer trusted blindly**: if an existing `.lrc` has a clearly short timeline, mismatched title/artist, or a receipt duration that differs by more than 15 seconds, the plugin checks once online. Only a high-confidence candidate (artist + duration within 3 seconds) replaces it, after backing up the old `.lrc` / `.zh.lrc` / `.ttml`. Suspicious local lyrics are shown immediately; the online check runs after display in the background and refreshes the panel only if it finds a better match, so a slow network never leaves the screen blank. **Before playback**, about 8 seconds after the music directory is known, a background pass checks existing `.lrc` files in the library and repairs suspicious ones ahead of time (up to 500 songs, sequential, 1.2 seconds apart, never on the main thread). `manual`, `checked` and `musicdoctor` receipts are trusted; no per-frame work or resident cache.
+- **Music Doctor checks existing lyrics too**: the installer now flags an existing `.lrc` whose timeline is below 75% of the audio, has no usable timeline, or whose receipt identity does not match. “Fix” re-matches by title, artist and duration, backs up old sidecars, writes a `musicdoctor` receipt, flattens multi-timestamp LRC lines and sorts them. `.lrc.meta.json` / `.nottml` move with the audio when organizing folders.
+- **“Check lyrics” button**: a new button under “Lyrics light theme” in the game's Sound tab runs the library precheck in the background. It shows “Checking…” and closes the settings page automatically when done, so you can go straight to listening. If a check is already running, it just closes the page.
+- **Scheduled clothing now snaps**: with free dressing off (the clothing menu stays visible), the plugin takes over the scheduled casual→pajamas change and runs the finger-snap flow instead of the game’s silent switch. It waits through dialogue/actions/dragging for up to 3 minutes; only the night direction is enabled. No `FreeDressing` writes or manual-hold override is left behind.
+- **Lyrics display**: timing uses the game's own playback clock; pausing no longer hides the panel. Light theme uses gold for sung text, black for unsung text and translations, with the game dialogue bubble shape/stroke.
+- **Other**: the memory page opens the existing page first and refreshes in the background; the final hotkey row for the dialogue box is restored.
 
 ## 0.3.0-ext.59 changes
 
